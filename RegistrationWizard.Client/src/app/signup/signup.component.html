@@ -1,0 +1,8 @@
+<form [formGroup]="signupForm" >
+    @if (!credentialsSubmited) {
+        <signup-credentials (credentialsSubmited)="goToResedency($event)"/>
+    }
+    @else {
+        <signup-residence (residenceSubmited)="submitForm($event)"/>
+    }
+</form>

@@ -1,0 +1,19 @@
+<section>
+    <h2>Step 2</h2>
+    <form formGroupName="residence" (submit)="submitResidence()">
+        <label for="country">Country</label>
+        <select id="country" formControlName="countryId" (change)="onCountryChanged()" required>   
+            <option [ngValue]="null" disabled>--</option>
+            <option *ngFor="let country of countryList" [ngValue]="country.id">{{ country.name }}</option>
+        </select>
+        <br>
+        <label for="province">Province</label>
+        <select id="province" formControlName="provinceId" required>
+            <option [ngValue]="null" disabled>--</option>
+            <option *ngFor="let province of provinceList" [ngValue]="province.id">{{ province.name }}</option>
+        </select>
+        <br>
+        
+        <button type="submit">Next</button>
+    </form>
+</section>

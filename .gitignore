@@ -1,0 +1,5 @@
+
+.vscode/*
+/.vs
+/RegistrationWizard.Server/bin/Debug/net8.0
+/RegistrationWizard.Server/obj

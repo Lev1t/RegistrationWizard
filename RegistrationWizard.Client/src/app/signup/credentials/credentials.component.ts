@@ -20,6 +20,7 @@ export class CredentialsComponent implements OnInit {
   @Output() credentialsSubmited = new EventEmitter<Credentials>();
 
   signupForm: FormGroupDirective;
+  private formSubmitAttempted: boolean = false;
 
   constructor(parent: FormGroupDirective) {
     this.signupForm = parent;
@@ -35,33 +36,38 @@ export class CredentialsComponent implements OnInit {
     { validators: passwordMatchValidator }));
   }
 
-  get credentials(): AbstractControl | null {
-    return this.signupForm.form.get('credentials');
-  }
-
-  get login(): AbstractControl | undefined | null {
-    return this.credentials?.get('login');
-  }
-
-  get password(): AbstractControl | undefined | null {
-    return this.credentials?.get('password');
-  }
-
-  get password2(): AbstractControl | undefined | null {
-    return this.credentials?.get('password2');
+  get credentials(): FormGroup | null {
+    return this.signupForm.form.get('credentials') as FormGroup;
   }
 
   get rewardAgreement(): AbstractControl | undefined | null {
     return this.credentials?.get('rewardAgreement');
   }
 
+  getFromControl(name: string): AbstractControl | undefined | null {
+    return this.credentials?.get(name);
+  }
+
+  isFieldInvalid(field: string): boolean {
+    const isFieldValid = this.credentials?.get(field)?.valid as boolean;
+    return this.formSubmitAttempted && !isFieldValid;
+  }
+
+  isPasswordMismatched(): boolean {
+    const isMismatched = this.credentials?.getError('passwordMismatch') as boolean
+    return this.formSubmitAttempted && isMismatched;
+  }
+
   submitCredentials() {
-    const credentialsData = new Credentials(
-      this.login?.value,
-      this.password?.value,
-      this.password2?.value,
-      this.rewardAgreement?.value
-    );
-    this.credentialsSubmited.emit(credentialsData);
+    this.formSubmitAttempted = true;
+
+    if (this.credentials?.valid) {
+      const credentialsData = new Credentials(
+        this.getFromControl('login')?.value,
+        this.getFromControl('password')?.value,
+        this.getFromControl('password2')?.value,
+        this.rewardAgreement?.value);
+      this.credentialsSubmited.emit(credentialsData);
+    }    
   }
 }
